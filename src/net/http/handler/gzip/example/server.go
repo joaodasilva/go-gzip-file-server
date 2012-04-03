@@ -27,18 +27,18 @@ func main() {
     log.Fatal(err)
   }
 
-  addr := *flag.String("addr", ":8080", "Address to listen at")
-  base := *flag.String("base", cwd, "Site base path (default: cwd)")
+  addr := flag.String("addr", ":8080", "Address to listen at")
+  base := flag.String("base", cwd, "Site base path (default: cwd)")
   flag.Parse()
 
   http.Handle("/", http.HandlerFunc(showIndex))
   http.Handle("/dir/",
-              http.StripPrefix("/dir", http.FileServer(http.Dir(base))))
+              http.StripPrefix("/dir", http.FileServer(http.Dir(*base))))
 
-  hostaddr := addr
+  hostaddr := *addr
   if len(hostaddr) == 0 || hostaddr[0] == ':' {
-    hostaddr = "localhost" + addr
+    hostaddr = "localhost" + *addr
   }
-  log.Printf("Starting server at http://%v serving from %v\n", hostaddr, base)
-  log.Fatal(http.ListenAndServe(addr, nil))
+  log.Printf("Starting server at http://%v serving from %v\n", hostaddr, *base)
+  log.Fatal(http.ListenAndServe(*addr, nil))
 }
