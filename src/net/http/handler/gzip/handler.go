@@ -33,7 +33,9 @@ func FileServer(root http.FileSystem) http.Handler {
   return &gzipFileHandler{root}
 }
 
-// Similar to net.http.ServeFile, but serves <file>.gz instead of <file>.
+// Similar to net.http.ServeFile, but serves <file>.gz instead of <file> if
+// it exists, has a later modification time, and the request supports gzip
+// encoding.
 func ServeFile(w http.ResponseWriter, r *http.Request, name string) {
   dir, file := filepath.Split(name)
   serveFile(w, r, http.Dir(dir), file, false)
@@ -48,7 +50,7 @@ func serveFile(w http.ResponseWriter, r *http.Request, fs http.FileSystem,
     return
   }
 
-  var modtime time.Time
+  modtime := time.Time{}
   isGzip := false
 
   file, stat := open(fs, name)
