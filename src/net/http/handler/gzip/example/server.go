@@ -5,7 +5,7 @@ import (
   "io"
   "log"
   "net/http"
-//  "net/http/handler/gzip"
+  "net/http/handler/gzip"
   "os"
 )
 
@@ -34,6 +34,8 @@ func main() {
   http.Handle("/", http.HandlerFunc(showIndex))
   http.Handle("/dir/",
               http.StripPrefix("/dir", http.FileServer(http.Dir(*base))))
+  http.Handle("/gzip/",
+              http.StripPrefix("/gzip", gzip.FileServer(http.Dir(*base))))
 
   hostaddr := *addr
   if len(hostaddr) == 0 || hostaddr[0] == ':' {
