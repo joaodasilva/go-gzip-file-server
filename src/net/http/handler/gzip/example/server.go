@@ -35,7 +35,7 @@ func main() {
   http.Handle("/dir/",
               http.StripPrefix("/dir", http.FileServer(http.Dir(*base))))
   http.Handle("/gzip/",
-              http.StripPrefix("/gzip", gzip.FileServer(gzip.Dir(*base))))
+              http.StripPrefix("/gzip", gzip.FileServer(http.Dir(*base))))
 
   hostaddr := *addr
   if len(hostaddr) == 0 || hostaddr[0] == ':' {
